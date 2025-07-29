@@ -40,6 +40,16 @@ const Header = () => {
       }`}>
       <div className="w-full">
         <div className="flex items-center justify-between h-16 lg:h-20 px-4 lg:px-8">
+             <Link
+  to="/homepage"
+  className="flex items-center space-x-3 group transition-transform duration-micro hover:scale-105"
+>
+  <div className="relative">
+    <img  src="/images/bijoux-by-dox-logo.png" alt="Logo Bijoux By Doux" className="w-[6rem] h-[2.5rem] lg:w-[10rem] lg:h-[4rem]"/>
+  </div>
+</Link>
+
+
          
           <nav className="hidden lg:flex items-center space-x-2">
             {navigationItems.map((item) => (
@@ -90,7 +100,28 @@ const Header = () => {
           </nav>
         </div>
       </div>
-
+        <div className="hidden lg:block bg-warm-canvas/50 border-t border-accent/10">
+        <div className="px-8 py-2">
+          <div className="flex items-center justify-center space-x-8 text-xs font-accent text-clear-hierarchy">
+            <div className="flex items-center space-x-2">
+              <Icon name="BadgeCheck" size={14} className="text-confident-confirmation" />
+              <span>Produits authentiques</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Icon name="Award" size={14} className="text-accent" />
+              <span>Authentification Garantie</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Icon name="Truck" size={14} className="text-clear-hierarchy" />
+              <span>Livraison Partout Au Maroc</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Icon name="Clock" size={14} className="text-clear-hierarchy" />
+              <span>Service Après-Vente Expert</span>
+            </div>
+          </div>
+        </div>
+      </div>
      
     </header>
   );
