@@ -21,7 +21,7 @@ const Header = () => {
   const navigationItems = [
     { name: 'Accueil', path: '/homepage', icon: 'Home' },
     { name: 'Montres', path: '/montres-detail', icon: 'Watch' },
-    { name: 'à propos', path: '/aboutUs', icon: 'Info' },
+    { name: 'à propos', path: '/about', icon: 'Info' },
     { name: 'Contact', path: '/contact', icon: 'Mail' },
   ];
 
@@ -40,12 +40,11 @@ const Header = () => {
       }`}>
       <div className="w-full">
         <div className="flex items-center justify-between h-16 lg:h-20 px-4 lg:px-8">
-             <Link
-  to="/homepage"
+             <Link to="/homepage"
   className="flex items-center space-x-3 group transition-transform duration-micro hover:scale-105"
 >
   <div className="relative">
-    <img  src="/images/bijoux-by-dox-logo.png" alt="Logo Bijoux By Doux" className="w-[6rem] h-[2.5rem] lg:w-[10rem] lg:h-[4rem]"/>
+    <img  src="/images/bijoux-by-dox-logo.png" alt="Logo Bijoux By Doux" className="w-[6rem] h-[2.5rem] lg:w-[9.5rem] lg:h-[4rem]"/>
   </div>
 </Link>
 
@@ -66,9 +65,11 @@ const Header = () => {
             <Button variant="ghost" size="sm" iconName="Search" iconPosition="left" className="text-comfortable-reading ">
               Rechercher
             </Button>
-            
-            <Button variant="outline" size="sm" iconName="Heart" iconPosition="left"  className=" text-comfortable-reading hover:bg-accent hover:text-accent-foreground "  > </Button>
-            <Button variant="outline" size="sm" iconName="CircleUserRound"  iconPosition="left" className=" text-comfortable-reading hover:bg-accent hover:text-accent-foreground" > </Button>
+            <Button  variant="outline" size="sm" iconName="Heart"  className=" text-comfortable-reading hover:bg-accent hover:text-accent-foreground "  > 
+               </Button>
+
+            <Button variant="outline" size="sm" iconName="CircleUserRound"  iconPosition="left" className=" text-comfortable-reading hover:bg-accent hover:text-accent-foreground" > 
+            </Button>
             
             <div className="relative inline-block">
             <Button variant="default" size="sm" iconName="ShoppingBag" iconPosition="left"  className="bg-accent text-accent-foreground hover:bg-elegant-urgency shadow-luxury [&_svg]:w-5 [&_svg]:h-5"/>
@@ -96,7 +97,26 @@ const Header = () => {
               ))}
             </div>
 
-           
+
+              {/*pour les petites ecrans */}
+           <div className="mt-4 pt-2 border-t border-border space-y-3">
+              <Button
+                variant="outline"size="sm" iconName="Search"  iconPosition="left" fullWidth  className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground">
+                Rechercher
+              </Button>
+              
+              <Button
+                variant="outline" size="sm" iconName="Heart" iconPosition="left" fullWidth  className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground"
+              >
+                Favoris
+              </Button>
+
+              <Button variant="outline" size="sm" iconName="ShoppingBag" iconPosition="left" fullWidth
+                className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground shadow-luxury"
+              >
+                Commander
+              </Button>
+            </div>
           </nav>
         </div>
       </div>
