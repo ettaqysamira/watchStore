@@ -20,8 +20,8 @@ const Header = () => {
 
   const navigationItems = [
     { name: 'Accueil', path: '/homepage', icon: 'Home' },
-    { name: 'Montres', path: '/montres-detail', icon: 'Watch' },
-    { name: 'à propos', path: '/about', icon: 'Info' },
+    { name: 'Collections', path: '/collections-details', icon: 'Watch' },
+    { name: 'À Propos', path: '/about', icon: 'Info' },
     { name: 'Contact', path: '/contact', icon: 'Mail' },
   ];
 
@@ -50,7 +50,7 @@ const Header = () => {
 
 
          
-          <nav className="hidden lg:flex items-center space-x-2">
+          <nav className="hidden lg:flex items-center space-x-2 ml-[9rem]">
             {navigationItems.map((item) => (
               <Link key={item.path} to={item.path} className={`group flex items-center space-x-2 px-4 py-2 rounded-lg font-cta font-medium transition-all duration-smooth ${
                   isActivePath(item.path) ? 'bg-accent text-accent-foreground shadow-luxury': 'text-comfortable-reading hover:text-accent hover:bg-warm-canvas'}`}>
@@ -120,11 +120,12 @@ const Header = () => {
           </nav>
         </div>
       </div>
+
         <div className="hidden lg:block bg-warm-canvas/50 border-t border-accent/10">
         <div className="px-8 py-2">
           <div className="flex items-center justify-center space-x-8 text-xs font-accent text-clear-hierarchy">
             <div className="flex items-center space-x-2">
-              <Icon name="BadgeCheck" size={14} className="text-confident-confirmation" />
+              <Icon name="BadgeCheck" size={14} className="text-[#005830]" />
               <span>Produits authentiques</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -132,12 +133,26 @@ const Header = () => {
               <span>Authentification Garantie</span>
             </div>
             <div className="flex items-center space-x-2">
+              <Icon name="Truck" size={14} className="text-[#005830]" />
+              <span>Livraison Partout Au Maroc</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Icon name="Clock" size={14} className="text-accent" />
+              <span>Service Client Premium</span>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div className="block sm:hidden bg-warm-canvas/50 border-t border-accent/10">
+        <div className="px-8 py-2">
+          <div className="flex items-center justify-center space-x-8 text-xs font-accent text-clear-hierarchy">
+            <div className="flex items-center space-x-2">
               <Icon name="Truck" size={14} className="text-clear-hierarchy" />
               <span>Livraison Partout Au Maroc</span>
             </div>
             <div className="flex items-center space-x-2">
               <Icon name="Clock" size={14} className="text-clear-hierarchy" />
-              <span>Service Après-Vente Expert</span>
+              <span>Service Client Premium</span>
             </div>
           </div>
         </div>
