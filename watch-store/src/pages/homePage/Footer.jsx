@@ -67,7 +67,7 @@ const Footer = () => {
   return (
     <footer className="bg-sophisticated-depth text-pure-clarity">
       
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-16 ">
         
         <div className="grid lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
           
@@ -152,7 +152,7 @@ const Footer = () => {
                 placeholder="Votre adresse email"
                 className="flex-1 px-4 py-3 bg-pure-clarity/10 border border-pure-clarity/20 rounded-lg text-pure-clarity placeholder-pure-clarity/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
-              <button className="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-cta font-medium hover:bg-elegant-urgency transition-colors duration-micro">
+              <button className="bg-[] text-accent-foreground px-6 py-3 rounded-lg font-cta font-medium hover:bg-elegant-urgency transition-colors duration-micro">
                 S'abonner
               </button>
             </div>
