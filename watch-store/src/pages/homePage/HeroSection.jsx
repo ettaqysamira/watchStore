@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon';
 import Button from '../../components/elements/Button';
+
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -9,7 +10,7 @@ const HeroSection = () => {
   const heroWatches = [
     {
       id: 1,
-      collection: "Collection Femme",
+      collection: "COLLECTION FEMME",
       model: "Signature Féminine",
       background: "/public/images/hero1.jpg",
       description: `Affirmez votre style avec raffinement. Une pièce d’exception pour la femme moderne, entre douceur et caractère`,
@@ -17,7 +18,7 @@ const HeroSection = () => {
     },
     {
       id: 2,
-      collection: "Collection Homme",
+      collection: "COLLECTION HOMME",
       model: "Signature Masculine",
       background: "/public/images/hero2.jpg",
       description: `Élégance discrète et précision, Pour l’homme exigeant et qui soigne chaque détail de son apparence.`,
@@ -63,29 +64,19 @@ const HeroSection = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="text-center lg:text-left animate-reveal">
               <div className="mb-4">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#ffff] font-headline font-semibold mb-2">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl text-[#ffff] font-head1	font-medium  tracking-widest  mb-2">
                   {currentWatch.collection}
                 </h1>
-                <p className="text-xl text-[#B8860B] font-accent">{currentWatch.model}</p>
+                <p className="text-xl text-[#B8860B] font-head">{currentWatch.model}</p>
               </div>
 
               <div className="mb-8">
-                <p className="text-body-large text-pure-clarity leading-relaxed whitespace-pre-line">
+                <p className="text-[17px] font-head font-medium text-pure-clarity leading-relaxed whitespace-pre-line">
                   {currentWatch.description}
                 </p>
               </div>
 
-              <div className="mb-8">
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  {currentWatch.features.map((feature, index) => (
-                    <div key={index}  className="flex items-center space-x-2 bg-pure-clarity/10 backdrop-blur-sm rounded-lg px-3 py-2">
-                      <Icon name="Check" size={14} className="text-[#005830]" />
-                      <span className="text-sm text-pure-clarity">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
+              
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
                 <div className="flex gap-3">
                   <Link to="/collection">

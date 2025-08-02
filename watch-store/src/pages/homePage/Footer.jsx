@@ -152,7 +152,7 @@ const Footer = () => {
                 placeholder="Votre adresse email"
                 className="flex-1 px-4 py-3 bg-pure-clarity/10 border border-pure-clarity/20 rounded-lg text-pure-clarity placeholder-pure-clarity/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
               />
-              <button className="bg-[] text-accent-foreground px-6 py-3 rounded-lg font-cta font-medium hover:bg-elegant-urgency transition-colors duration-micro">
+              <button className="bg-[#005830] text-accent-foreground px-6 py-3 rounded-lg font-cta font-medium hover:bg-elegant-urgency transition-colors duration-micro">
                 S'abonner
               </button>
             </div>

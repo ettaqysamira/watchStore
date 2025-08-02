@@ -2,7 +2,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Raleway:ital,wght@0,114;1,114&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Raleway:ital@0;1&family=Syne:wght@400..800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,6 +59,8 @@
     --font-body: 'Inter', sans-serif;
     --font-cta: 'Montserrat', sans-serif;
     --font-accent: 'Cormorant Garamond', serif;
+    --font-head:'Raleway', sans-serif;
+    --font-head1:'Josefin Sans', sans-serif;
 
     --spacing-xs: 8px;
     --spacing-sm: 13px;
@@ -149,7 +152,7 @@
   }
 
   .text-headline {
-    @apply text-2xl md:text-3xl lg:text-4xl font-headline font-medium;
+    @apply text-2xl md:text-3xl lg:text-4xl  font-medium;
   }
 
   .text-subheading {

@@ -2,6 +2,7 @@ import React  from 'react';
 import Header from '../../components/elements/Header';
 import Footer from './Footer';
 import HeroSection from './HeroSection';
+import MontreCategories from './MontreCategories';
 
 const HomePageApp= ()=> {
 return(
@@ -14,6 +15,10 @@ return(
         <section id="hero-section" className="relative">
           <HeroSection/>  
         </section>
+
+        <section id="montre-categories" className="relative">
+            <MontreCategories />
+          </section>
          </main>
 
 
