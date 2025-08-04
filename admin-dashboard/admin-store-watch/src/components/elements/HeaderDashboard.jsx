@@ -10,7 +10,7 @@ const HeaderDashboard = () => {
   const primaryNavItems = [
     { path: '/stock-management', label: 'Stock', icon: 'Package' },
     { path: '/orders', label: 'Commandes', icon: 'ShoppingBag' },
-    { path: '/avis-client', label: 'Avis', icon: 'Star ' },
+    { path: '/avis-client', label: 'Avis', icon: 'Star' },
   ];
 
   const secondaryNavItems = [
