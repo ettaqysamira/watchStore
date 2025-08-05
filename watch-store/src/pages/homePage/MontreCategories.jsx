@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon';
+import axios from 'axios';
+
+
 const MontreCategories = () => {
   const [activeCollection, setActiveCollection] = useState('homme');
   const [isMobile, setIsMobile] = useState(false);
@@ -8,6 +11,11 @@ const MontreCategories = () => {
     homme: useRef(null),
     femme: useRef(null),
   };
+
+  const [collections, setCollections] = useState({
+    homme: { title: "Collection Homme", subtitle: "L'élégance masculine et l'art du détail", icon: "Watch", products: [] },
+    femme: { title: "Collection Femme", subtitle: "L'élégance féminine et l'art du détail", icon: "Gem", products: [] },
+  });
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -19,58 +27,37 @@ const MontreCategories = () => {
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
-  const collections = {
-    homme: {
-      title: "COLLECTION HOMME",
-      subtitle: "L'élégance masculine et l'art du détail",
-      icon: "Watch",
-      products: [
-        {
-          id: 1,
-          brand: "Rolex",
-          model: "Rolex Submariner Date Homme",
-          price: "200",
-          originalPrice: "195",
-          image: "https://m.media-amazon.com/images/I/61el+rhavSL._AC_SL1120_.jpg",
-          isNew: true,
-        },
-        {
-          id: 2,
-          brand: "Guess",
-          model: "Guess Atlas Homme",
-          price: "300",
-          image: "https://images-cdn.ubuy.co.in/657083a8987ecb56901ad01d-watch-guess-men-39-s-legacy-watch.jpg",
-          
-        },
-      
-      ]
-    },
-    femme: {
-      title: "COLLECTION FEMME",
-      subtitle: "L'élégance féminine et l'art du détail",
-      icon: "Gem",
-      products: [
-        {
-          id: 7,
-          brand: "Rolex",
-          model: "Rolex Submariner Date Femme",
-          price: "899",
-          image: "https://cdn11.bigcommerce.com/s-bc02e/images/stencil/1280x1280/products/46023/124578/rolex-datejust-steel-yellow-gold-silver-diamond-dial-ladies-watch-69173-30009_330e8__34752__58979__76106.1718214657.jpg?c=2",
-          isNew: true,
-        },
-        {
-          id: 8,
-          brand: "Guess",
-          model: "Guess Doré Femme",
-          price: "459,00",
-          image: "https://sp-ao.shortpixel.ai/client/to_webp,q_glossy,ret_img,w_600,h_600/https://montrex.ma/wp-content/uploads/2024/02/montre-femme-gs-lxw0826l2.png",
-        },
-       
-        
-      ]
-    },
-  
-  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/watches');
+        const products = response.data;
+
+        const grouped = {
+          homme: [],
+          femme: [],
+        };
+
+        products.forEach(product => {
+          const category = product.category?.toLowerCase();
+          if (grouped[category]) {
+            grouped[category].push(product);
+          }
+        });
+
+        setCollections(prev => ({
+          ...prev,
+          homme: { ...prev.homme, products: grouped.homme },
+          femme: { ...prev.femme, products: grouped.femme },
+        }));
+      } catch (error) {
+        console.error('Erreur lors de la récupération des produits:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const scroll = (collection, direction) => {
     const ref = scrollRefs[collection].current;
@@ -110,7 +97,7 @@ const MontreCategories = () => {
   <div className={`absolute ${isMobileView ? 'top-5 right-5' : 'top-4 md:top-8 right-4 md:right-8'} 
     z-10 bg-warm-concern text-pure-clarity rounded-full ${isMobileView ? 'px-1.5 py-0.5' : 'px-2 py-1'} flex items-center justify-center`}>
     <span className={`${isMobileView ? 'text-[8px]' : 'text-xs'} font-cta font-medium`}>
-      {Math.round(((parseFloat(product.originalPrice) - parseFloat(product.price)) / parseFloat(product.originalPrice)) * 100)}%
+      -{Math.round(((parseFloat(product.originalPrice) - parseFloat(product.price)) / parseFloat(product.originalPrice)) * 100)}%
     </span>
   </div>
 )}
@@ -119,7 +106,7 @@ const MontreCategories = () => {
           <div className={`relative ${isMobileView ? 'mb-3' : 'mb-4 md:mb-6'} overflow-hidden rounded-lg bg-subtle-elevation`}>
             <div className="aspect-square">
               <img
-                src={product.image}
+                src={`http://localhost:5000/restoreImages/${product.image}`}
                 alt={`${product.brand} ${product.model}`}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-smooth"
               />
@@ -142,7 +129,7 @@ const MontreCategories = () => {
               {product.brand}
             </p>
             <h3 className={`${isMobileView ? 'text-xs leading-tight' : 'text-sm md:text-lg'} font-head font-medium  text-[17px] text-comfortable-reading mb-2 line-clamp-2`}>
-              {product.model}
+              {product.name}
             </h3>
             
            
@@ -226,7 +213,7 @@ const MontreCategories = () => {
             }`}
           >
             <div className="text-center mb-6 md:mb-8">
-              <h3 className="text-xl md:text-2xl tracking-widest font-head1 font-medium text-comfortable-reading mb-2">
+              <h3 className="text-xl md:text-2xl tracking-widest font-head1 font-medium text-comfortable-reading mb-2 uppercase">
                 {collection.title}
               </h3>
               <p className="text-sm md:text-body text-clear-hierarchy">
