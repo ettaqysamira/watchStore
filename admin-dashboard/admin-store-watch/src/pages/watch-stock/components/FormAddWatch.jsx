@@ -17,13 +17,17 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
     price: '',
     currentStock: '',
     originalPrice: '',
-    image: null
+    image: null,
+    imageGallery: [],
+    features: ['', '', '', '']
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
-
+  const [galleryPreviews, setGalleryPreviews] = useState([]);
   const categories = ['Homme', 'Femme'];
+  const featureLabels = ['Mouvement', 'Bracelet', 'Fonctions', 'Dimensions'];
+
 
   const generateSKU = (name) => {
     const prefix = name.trim().substring(0, 3).toUpperCase();
@@ -61,6 +65,7 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
     }
   };
 
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Le nom du produit est requis';
@@ -92,6 +97,16 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
+       let uploadedGalleryFilenames = [];
+            if (formData.imageGallery.length > 0) {
+              const galleryForm = new FormData();
+              formData.imageGallery.forEach((img) => galleryForm.append('image', img));
+              const galleryUploadRes = await axios.post('http://localhost:5000/api/galleryImages', galleryForm, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+              });
+              uploadedGalleryFilenames = galleryUploadRes.data.filenames;
+            }
+
       const productData = {
         name: formData.name,
         brand: formData.brand,
@@ -104,7 +119,10 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
         id: Date.now(),
         daysOfSupply: Math.floor(parseInt(formData.currentStock) / 2),
         lastMovement: new Date().toLocaleDateString(),
-        image: uploadRes.data.filename 
+        image: uploadRes.data.filename ,
+        imageGallery: uploadedGalleryFilenames,
+        features: formData.features.filter(f => f.trim() !== ''),
+
       };
 
       await axios.post('http://localhost:5000/api/watches', productData);
@@ -117,6 +135,38 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
       alert('Erreur lors de l’ajout du produit.');
     }
   };
+
+  const handleGalleryChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData((prev) => ({
+      ...prev,
+      imageGallery: [...(prev.imageGallery || []), ...files],
+    }));
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setGalleryPreviews((prev) => [...prev, ...newPreviews]);
+    e.target.value = null;
+
+  };
+
+  const handleFeatureChange = (index, value) => {
+    const newFeatures = [...formData.features];
+    newFeatures[index] = value;
+    setFormData((prev) => ({
+      ...prev,
+      features: newFeatures,
+    }));
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+  setFormData((prev) => ({
+    ...prev,
+    imageGallery: prev.imageGallery.filter((_, index) => index !== indexToRemove),
+  }));
+
+  setGalleryPreviews((prev) => prev.filter((_, index) => index !== indexToRemove));
+};
+
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 pt-[5.5rem]">
@@ -170,6 +220,35 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
                   <p className="text-sm text-error mt-2">{errors.image}</p>
                 )}
               </div>
+              
+             <div className="mt-6">
+              <label className="block text-sm font-medium text-foreground mb-2">Galerie d’images</label>
+              <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryChange}
+                  className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary file:text-white"
+                />
+
+              <div className="flex flex-wrap gap-2 mt-4 justify-center">
+                 {galleryPreviews.map((src, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={src}
+                        alt={`gallery-${index}`}
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                    <button type="button" onClick={() => handleRemoveImage(index)}  className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition" title="Supprimer">
+                     ×
+                    </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             </div>
 
             <div className="lg:col-span-2 space-y-6">
@@ -214,14 +293,14 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
                 </div>
 
                 <div>
-  <label className="block text-sm font-medium text-foreground mb-1">
-    Description *
-  </label>
-  <textarea name="description" value={formData.description} onChange={handleInputChange} rows={4} placeholder="Description détaillée du montre..."  className={`w-full px-3 py-2 border ${errors.description ? 'border-error' : 'border-border'} rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none`} />
-  {errors.description && (
-    <p className="text-sm text-error mt-1">{errors.description}</p>
-  )}
-</div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Description *
+              </label>
+              <textarea name="description" value={formData.description} onChange={handleInputChange} rows={4} placeholder="Description détaillée du montre..."  className={`w-full px-3 py-2 border ${errors.description ? 'border-error' : 'border-border'} rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none`} />
+              {errors.description && (
+                <p className="text-sm text-error mt-1">{errors.description}</p>
+              )}
+            </div>
 
               </div>
               <div className="space-y-4">
@@ -252,6 +331,34 @@ const AddWatchForm = ({ onSubmit, onCancel }) => {
               </div>
             </div>
           </div>
+          <div className="space-y-4 mt-6">
+          <h3 className="text-lg font-semibold text-foreground">Caractéristiques</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {formData.features.map((feature, index) => (
+              <div key={index}>
+                 <label className="block text-sm font-medium text-foreground mb-1">
+          {featureLabels[index] || `Caractéristique ${index + 1}`}
+        </label>
+                <Input
+                  value={feature}
+                  onChange={(e) => handleFeatureChange(index, e.target.value)}
+                   placeholder={
+                    index === 0
+                      ? 'EX: Mouvement Automatique/Mécanique...'
+                      : index === 1
+                      ? 'EX: Bracelet en Acier inoxydable/Cuir...'
+                      : index === 2
+                      ? 'EX: Heures, Minutes, Secondes'
+                      : index === 3
+                      ? 'EX: Taille 40mm x 10mm'
+                      : 'Autre caractéristique'
+                            }
+                  />
+              </div>
+            ))}
+          </div>
+        </div>
+
 
           <div className="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-border">
             <Button type="button" variant="outline" onClick={onCancel}>

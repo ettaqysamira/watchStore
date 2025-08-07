@@ -35,8 +35,23 @@ app.post('/api/watchImage', watchImage.single('image'), (req, res) => {
   });
 })
 
+app.post('/api/galleryImages', watchImage.array('image', 5), (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: 'Aucun fichier téléchargé' });
+  }
 
+  const filesInfo = req.files.map(file => ({
+    filename: file.filename,
+    path: file.path
+  }));
 
+ res.json({
+  message: 'Fichiers téléchargés avec succès',
+  filenames: filesInfo.map(file => file.filename),
+  files: filesInfo
+});
+
+});
 
 
 

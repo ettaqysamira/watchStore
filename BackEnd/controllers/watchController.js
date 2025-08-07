@@ -1,4 +1,6 @@
 import Watch from "../models/watch.js";
+import mongoose from 'mongoose';
+
 
 export const getWatches = async (req, res) => {
   try {
@@ -40,4 +42,49 @@ export const createWatch = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+
+
+export const getWatchById = async (req, res) => {
+  const { id } = req.params;
+  
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "ID invalide" });
+  }
+  
+  try {
+    const product = await Watch.findById(id);
+    if (!product) return res.status(404).json({ message: "Produit non trouvé" });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+export const getSimilarWatches = async (req, res) => {
+  const { brand, price, excludeId } = req.query;
+  const targetPrice = parseFloat(price);
+
+  try {
+    const similarWatches = await Watch.find({
+      _id: { $ne: excludeId },
+      $or: [
+        { brand: brand },
+        {
+          price: {
+            $gte: targetPrice - 200,
+            $lte: targetPrice + 200,
+          },
+        },
+      ],
+    }).limit(3);
+
+    res.status(200).json(similarWatches);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
 

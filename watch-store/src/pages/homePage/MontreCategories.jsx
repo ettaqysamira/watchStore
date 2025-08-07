@@ -71,15 +71,17 @@ const MontreCategories = () => {
   };
 
   const getNewProduct = (product) => {
-    if (product.isNew) return { text: "Nouveauté", icon: "Sparkles", color: "accent" };
+    if (product.hasNew) return { text: "Nouveauté", icon: "Sparkles", color: "accent" };
     return null;
   };
 
   const ProductCard = ({ product, isMobileView = false }) => {
     const badge = getNewProduct(product);
     
+
+    
     return (
-      <div className={`group ${isMobileView ? 'w-full' : 'flex-shrink-0 w-80'}`}>
+      <div className={`group ${isMobileView ? 'w-full' : 'flex-shrink-0 w-[25%] max-w-[25%] min-w-[25%]'}`}>
         <div className="luxury-card p-4 md:p-6 h-full relative overflow-hidden">
           
           {badge && (
@@ -101,8 +103,6 @@ const MontreCategories = () => {
     </span>
   </div>
 )}
-
-
           <div className={`relative ${isMobileView ? 'mb-3' : 'mb-4 md:mb-6'} overflow-hidden rounded-lg bg-subtle-elevation`}>
             <div className="aspect-square">
               <img
@@ -128,7 +128,7 @@ const MontreCategories = () => {
             <p className={`${isMobileView ? 'text-[10px]' : 'text-xs md:text-sm'} font-accent text-[#005830] mb-1`}>
               {product.brand}
             </p>
-            <h3 className={`${isMobileView ? 'text-xs leading-tight' : 'text-sm md:text-lg'} font-head font-medium  text-[17px] text-comfortable-reading mb-2 line-clamp-2`}>
+            <h3 className={`${isMobileView ? 'text-xs leading-tight' : 'text-sm md:text-[13px]'} font-syne font-semibold leading-[21px] text-comfortable-reading mb-2 line-clamp-2 uppercase`}>
               {product.name}
             </h3>
             
@@ -149,7 +149,7 @@ const MontreCategories = () => {
           </div>
 
           <div className="flex space-x-1">
-            <Link to="/product-detail" className="flex-1">
+            <Link to={`/product-detail/${product._id}`}   className="flex-1">
               <button className={`w-full btn-outline ${isMobileView ? 'text-[10px] py-1.5' : 'text-xs md:text-sm py-2'}`}>
                 {isMobileView ? 'Détails' : 'Voir Détails'}
               </button>

@@ -20,7 +20,7 @@ const Header = () => {
 
   const navigationItems = [
     { name: 'Accueil', path: '/homepage', icon: 'Home' },
-    { name: 'Collections', path: '/collections-details', icon: 'Watch' },
+    { name: 'Collections', path: '/product-detail', icon: 'Watch' },
     { name: 'À Propos', path: '/about', icon: 'Info' },
     { name: 'Contact', path: '/contact', icon: 'Mail' },
   ];

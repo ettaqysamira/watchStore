@@ -86,7 +86,9 @@ module.exports = {
         'cta': ['Montserrat', 'sans-serif'],
         'accent': ['Cormorant Garamond', 'serif'],
         'head': ['Raleway', 'sans-serif'],
-         'head1': ['"Josefin Sans"', 'sans-serif'],
+        'head1': ['"Josefin Sans"', 'sans-serif'],
+        'syne': ['Syne', 'sans-serif'],
+        'saira': ['Saira', 'sans-serif'],
       },
       fontSize: {
         'hero': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
