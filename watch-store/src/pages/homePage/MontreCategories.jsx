@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon';
 import axios from 'axios';
+import { useCart } from '../../components/elements/PanierSide';
 
 
 const MontreCategories = () => {
@@ -16,6 +17,7 @@ const MontreCategories = () => {
     homme: { title: "Collection Homme", subtitle: "L'élégance masculine et l'art du détail", icon: "Watch", products: [] },
     femme: { title: "Collection Femme", subtitle: "L'élégance féminine et l'art du détail", icon: "Gem", products: [] },
   });
+   const { addToCart } = useCart();
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -154,9 +156,12 @@ const MontreCategories = () => {
                 {isMobileView ? 'Détails' : 'Voir Détails'}
               </button>
             </Link>
-            <button className={`${isMobileView ? 'px-2 py-1.5' : 'px-3 md:px-4 py-2'} bg-accent/10 text-accent rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-micro`}>
+            
+              <button className={`${isMobileView ? 'px-2 py-1.5' : 'px-3 md:px-4 py-2'} bg-accent/10 text-accent rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-micro`}
+              onClick={() => addToCart(product)}>
               <Icon name="ShoppingBag" size={isMobileView ? 12 : 15} />
             </button>
+           
           </div>
         </div>
       </div>

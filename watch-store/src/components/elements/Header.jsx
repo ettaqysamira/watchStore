@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from './Button';
 import Icon from '../Icon';
+import { useCart } from './PanierSide';
 
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { setIsCartOpen, getTotalItems } = useCart();
+
   const location = useLocation();
 
   useEffect(() => {
@@ -40,16 +43,11 @@ const Header = () => {
       }`}>
       <div className="w-full">
         <div className="flex items-center justify-between h-16 lg:h-20 px-4 lg:px-8">
-             <Link to="/homepage"
-  className="flex items-center space-x-3 group transition-transform duration-micro hover:scale-105"
->
-  <div className="relative">
-    <img  src="/images/bijoux-by-dox-logo.png" alt="Logo Bijoux By Doux" className="w-[6rem] h-[2.5rem] lg:w-[9.5rem] lg:h-[4rem]"/>
-  </div>
-</Link>
-
-
-         
+             <Link to="/homepage" className="flex items-center space-x-3 group transition-transform duration-micro hover:scale-105">
+              <div className="relative">
+                <img  src="/images/bijoux-by-dox-logo.png" alt="Logo Bijoux By Doux" className="w-[6rem] h-[2.5rem] lg:w-[9.5rem] lg:h-[4rem]"/>
+              </div>
+              </Link>
           <nav className="hidden lg:flex items-center space-x-2 ml-[9rem]">
             {navigationItems.map((item) => (
               <Link key={item.path} to={item.path} className={`group flex items-center space-x-2 px-4 py-2 rounded-lg font-cta font-medium transition-all duration-smooth ${
@@ -72,17 +70,35 @@ const Header = () => {
             </Button>
             
             <div className="relative inline-block">
-            <Button variant="default" size="sm" iconName="ShoppingBag" iconPosition="left"  className="bg-accent text-accent-foreground hover:bg-elegant-urgency shadow-luxury [&_svg]:w-5 [&_svg]:h-5"/>
-
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow">
-                0
-            </span>
-</div>
+             <Button variant="default" size="sm" iconName="ShoppingBag" iconPosition="left"
+                className="bg-accent text-accent-foreground hover:bg-elegant-urgency shadow-luxury [&_svg]:w-5 [&_svg]:h-5"
+                onClick={() => setIsCartOpen(true)}/>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow">
+                  {getTotalItems()}
+                </span>
+                  )}
+            </div>
           </div>
 
-          <button onClick={toggleMenu}   className="lg:hidden p-2 rounded-lg text-comfortable-reading hover:bg-warm-canvas transition-colors duration-micro"      aria-label="Toggle menu">
-            <Icon  name={isMenuOpen ? "X" : "Menu"}  size={24}  className="transition-transform duration-micro" />
-          </button>
+          <div className="lg:hidden flex items-center space-x-2">
+            <div className="relative inline-block">
+              <Button variant="default" size="sm" iconName="ShoppingBag" iconPosition="left"
+                className="text-accent-foreground hover:bg-elegant-urgency  [&_svg]:w-5 [&_svg]:h-5"
+                onClick={() => setIsCartOpen(true)}
+              />
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow">
+                  {getTotalItems()}
+                </span>
+              )}
+            </div>
+            
+            <button onClick={toggleMenu}   className="p-2 rounded-lg text-comfortable-reading hover:bg-warm-canvas transition-colors duration-micro"      aria-label="Toggle menu">
+              <Icon  name={isMenuOpen ? "X" : "Menu"}  size={24}  className="transition-transform duration-micro" />
+            </button>
+          </div>
+
         </div>
 
         <div className={`lg:hidden transition-all duration-carousel overflow-hidden ${ isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'  }`}>
@@ -98,7 +114,7 @@ const Header = () => {
             </div>
 
 
-              {/*pour les petites ecrans */}
+          {/*pour les petites ecrans */}
            <div className="mt-4 pt-2 border-t border-border space-y-3">
               <Button
                 variant="outline"size="sm" iconName="Search"  iconPosition="left" fullWidth  className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground">
@@ -109,12 +125,6 @@ const Header = () => {
                 variant="outline" size="sm" iconName="Heart" iconPosition="left" fullWidth  className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground"
               >
                 Favoris
-              </Button>
-
-              <Button variant="outline" size="sm" iconName="ShoppingBag" iconPosition="left" fullWidth
-                className="justify-start border-accent/20 text-comfortable-reading hover:bg-accent hover:text-accent-foreground shadow-luxury"
-              >
-                Commander
               </Button>
             </div>
           </nav>
