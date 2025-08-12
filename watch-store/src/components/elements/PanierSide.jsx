@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import Icon from '../Icon';
+import { useNavigate } from 'react-router-dom';
 
 const CartContext = createContext();
 
@@ -12,15 +13,12 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-
-  useEffect(() => {
+const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem('luxuryWatchCart');
-    if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    }
-  }, []);
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('luxuryWatchCart', JSON.stringify(cartItems));
@@ -28,11 +26,11 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems?.find(item => item?._id === product?._id);
+      const existingItem = prevItems.find(item => item._id === product._id);
       if (existingItem) {
-        return prevItems?.map(item =>
-          item?._id === product?._id
-            ? { ...item, quantity: item?.quantity + 1 }
+        return prevItems.map(item =>
+          item._id === product._id
+            ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
@@ -42,7 +40,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems?.filter(item => item?._id !== productId));
+    setCartItems(prevItems => prevItems.filter(item => item._id !== productId));
   };
 
   const updateQuantity = (productId, newQuantity) => {
@@ -51,8 +49,8 @@ export const CartProvider = ({ children }) => {
       return;
     }
     setCartItems(prevItems =>
-      prevItems?.map(item =>
-        item?._id === productId
+      prevItems.map(item =>
+        item._id === productId
           ? { ...item, quantity: newQuantity }
           : item
       )
@@ -60,14 +58,14 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotalPrice = () => {
-    return cartItems?.reduce((total, item) => {
-      const price = parseFloat(item?.price?.replace(/[^\d,]/g, '')?.replace(',', '.'));
-      return total + (price * item?.quantity);
+    return cartItems.reduce((total, item) => {
+      const price = parseFloat(item.price.replace(/[^\d,]/g, '').replace(',', '.'));
+      return total + (price * item.quantity);
     }, 0);
   };
 
   const getTotalItems = () => {
-    return cartItems?.reduce((total, item) => total + item?.quantity, 0);
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
   const clearCart = () => {
@@ -105,20 +103,33 @@ const PanierSide = () => {
     clearCart
   } = useCart();
 
+  const navigate = useNavigate();
+
   const formatPrice = (price) => {
-    if (typeof price === 'string') {
-      const numericPrice = parseFloat(price?.replace(/[^\d,]/g, '')?.replace(',', '.'));
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'decimal',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      })?.format(numericPrice);
-    }
-    return price?.toFixed(2);
-  };
+  let numericPrice;
+  
+  if (typeof price === 'string') {
+    numericPrice = parseFloat(price.replace(/[^\d,]/g, '').replace(',', '.'));
+  } else if (typeof price === 'number') {
+    numericPrice = price;
+  } else {
+    numericPrice = 0;
+  }
+  
+  if (isNaN(numericPrice)) numericPrice = 0;
+
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(numericPrice);
+};
+
+
 
   const handleCheckout = () => {
-    alert('Redirection vers le paiement...');
+    setIsCartOpen(false);
+    navigate('/shopping-cart');
   };
 
   if (!isCartOpen) return null;
@@ -149,7 +160,7 @@ const PanierSide = () => {
           </div>
           <div className="flex items-center space-x-3">
             {totalItems > 0 && (
-              <button onClick={clearCart}  className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              <button onClick={clearCart} className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
                 Vider
               </button>
             )}
@@ -162,8 +173,8 @@ const PanierSide = () => {
         </div>
 
         <div className="flex flex-col h-full">
-          {cartItems?.length === 0 ? (
-            (<div className="flex-1 flex flex-col items-center mb-[10.75rem] justify-center p-6 text-center">
+          {cartItems.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center mb-[10.75rem] justify-center p-6 text-center">
               <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                 <Icon name="ShoppingBag" size={24} className="text-gray-400" />
               </div>
@@ -178,18 +189,18 @@ const PanierSide = () => {
               >
                 Continuer vos achats
               </button>
-            </div>)
+            </div>
           ) : (
             <>
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-6">
-                  {cartItems?.map((item) => (
-                    <div key={item?._id} className="flex space-x-4">
+                  {cartItems.map((item) => (
+                    <div key={item._id} className="flex space-x-4">
                       <div className="flex-shrink-0">
                         <div className="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden">
                           <img
-                            src={`http://localhost:5000/restoreImages/${item?.image}`}
-                            alt={`${item?.brand} ${item?.model}`}
+                            src={`http://localhost:5000/restoreImages/${item.image}`}
+                            alt={`${item.brand} ${item.model}`}
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -199,25 +210,25 @@ const PanierSide = () => {
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
                             <h3 className="text-base font-medium text-gray-900 mb-1">
-                              {item?.name}
+                              {item.name}
                             </h3>
                             <p className="text-sm text-gray-500 mb-3">
-                              {item?.brand}
+                              {item.brand}
                             </p>
                             <div className="text-base font-medium text-gray-900 mb-3">
-                              {formatPrice(item?.price)} MAD
+                              {formatPrice(item.price)} MAD
                             </div>
 
                             <div className="flex items-center space-x-3">
-                              <button onClick={() => updateQuantity(item?._id, item?.quantity - 1)}
+                              <button onClick={() => updateQuantity(item._id, item.quantity - 1)}
                                 className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
                               >
                                 <Icon name="Minus" size={14} />
                               </button>
                               <span className="font-medium text-gray-900 min-w-[2rem] text-center">
-                                {item?.quantity}
+                                {item.quantity}
                               </span>
-                              <button onClick={() => updateQuantity(item?._id, item?.quantity + 1)}
+                              <button onClick={() => updateQuantity(item._id, item.quantity + 1)}
                                 className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
                               >
                                 <Icon name="Plus" size={14} />
@@ -225,7 +236,7 @@ const PanierSide = () => {
                             </div>
                           </div>
                           
-                          <button  onClick={() => removeFromCart(item?._id)}
+                          <button onClick={() => removeFromCart(item._id)}
                             className="text-gray-400 hover:text-gray-600 transition-colors p-1 ml-2"
                           >
                             <Icon name="X" size={16} />
@@ -244,7 +255,7 @@ const PanierSide = () => {
                       Sous-total ({totalItems} article{totalItems > 1 ? 's' : ''})
                     </span>
                     <span className="font-medium text-gray-900">
-                      {formatPrice(totalPrice?.toString())} MAD
+                      {formatPrice(totalPrice.toString())} MAD
                     </span>
                   </div>
                   
@@ -257,14 +268,14 @@ const PanierSide = () => {
                   
                   <div className="flex items-center space-x-2 text-xs text-green-600">
                     <Icon name="Check" size={12} />
-                    <span>Livraison gratuite partout au maroc</span>
+                    <span>Livraison gratuite partout au Maroc</span>
                   </div>
                   
                   <div className="border-t border-gray-100 pt-3">
                     <div className="flex justify-between items-center">
                       <span className="text-base font-medium text-gray-900">Total</span>
                       <span className="text-lg font-semibold text-gray-900">
-                        {formatPrice(totalPrice?.toString())} MAD
+                        {formatPrice(totalPrice.toString())} MAD
                       </span>
                     </div>
                   </div>
@@ -297,4 +308,4 @@ const PanierSide = () => {
   );
 };
 
-export default PanierSide;
+export default PanierSide;                 
