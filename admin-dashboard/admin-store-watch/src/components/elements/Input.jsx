@@ -39,7 +39,7 @@ const Input = React.forwardRef(({
                         error ? "text-destructive" : "text-foreground"
                     )}
                 >
-                    {label} {required && <span className="text-destructive ml-1">*</span>}
+                    {label} {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
             )}
 
