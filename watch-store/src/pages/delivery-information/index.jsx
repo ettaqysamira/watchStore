@@ -30,34 +30,54 @@ const DeliveryInformationForm = () => {
     }
   }, [cartItems?.length, navigate]);
 
-  const handleFormSubmit = async (formData) => {
-    setIsLoading(true);
-    
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const orderData = {
-        id: `CMD-${Date.now()}`,
-        date: new Date()?.toISOString(),
-        customer: formData,
-        items: cartItems,
-        deliveryOption: formData?.deliveryOption,
-        total: cartItems?.reduce((sum, item) => sum + (item?.price * item?.quantity), 0) + 
-               (formData?.deliveryOption === 'express' ? 50 : formData?.deliveryOption === 'premium' ? 100 : 0),
-        status: 'confirmed'
-      };
-      
-      localStorage.setItem('currentOrder', JSON.stringify(orderData));
-      localStorage.removeItem('cartItems'); 
-      
-      navigate('/order-confirmation');
-      
-    } catch (error) {
-      console.error('Order submission failed:', error);
-    } finally {
-      setIsLoading(false);
+const handleFormSubmit = async (formData) => {
+  setIsLoading(true);
+
+  try {
+    const totalAmount =
+      cartItems?.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0) +
+      (formData?.deliveryOption === "express" ? 50 : formData?.deliveryOption === "premium" ? 100 : 0);
+
+    const items = cartItems.map(item => ({
+      product: item._id,        
+      name: item.name,         
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    const orderData = {
+      id: `CMD-${Date.now()}`,
+      date: new Date().toISOString(),
+      customer: formData,
+      items,
+      deliveryOption: formData.deliveryOption,
+      totalAmount,             
+      status: "confirmed",
+    };
+
+    const response = await fetch("http://localhost:5000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur API lors de la création de commande");
     }
-  };
+
+    const savedOrder = await response.json();
+
+    localStorage.setItem("currentOrder", JSON.stringify(savedOrder));
+    localStorage.removeItem("cartItems");
+    navigate("/order-confirmation");
+  } catch (error) {
+    console.error("Order submission failed:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   const handleBackToCart = () => {
     navigate('/shopping-cart');

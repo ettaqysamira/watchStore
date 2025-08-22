@@ -7,6 +7,7 @@ import PanierSide from "./components/elements/PanierSide";
 import ShoppingCart from "./pages/shopping-cart";
 import DeliveryInformationForm from "./pages/delivery-information";
 
+
 const Routes = () => {
   return (
     <BrowserRouter>
@@ -19,7 +20,6 @@ const Routes = () => {
             <Route path="/product-detail/:id" element={<ProductDetailsApp />} />
             <Route path="/shopping-cart" element={<ShoppingCart />} />
             <Route path="/delivery-information" element={<DeliveryInformationForm />} />
-
           </RouterRoutes>
           <PanierSide />
         </div>

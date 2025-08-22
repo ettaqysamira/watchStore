@@ -12,7 +12,6 @@ const DeliveryForm = ({ onSubmit, isLoading = false }) => {
     email: '',
     address: '',
     city: '',
-    postalCode: '',
     deliveryOption: 'standard',
     saveInfo: false,
     newsletter: false
@@ -76,7 +75,7 @@ case 'email':
   const handleSubmit = (e) => {
     e?.preventDefault();
   const newErrors = {};
-  const requiredFields = ['firstName', 'lastName', 'phone', 'email', 'address', 'city', 'postalCode'];
+  const requiredFields = ['firstName', 'lastName', 'phone', 'email', 'address', 'city'];
     
     requiredFields?.forEach(field => {
       const error = validateField(field, formData?.[field]);
