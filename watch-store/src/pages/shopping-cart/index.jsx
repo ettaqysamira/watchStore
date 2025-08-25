@@ -92,6 +92,19 @@ const ShoppingCart = () => {
           )}
         </div>
       </div>
+      <footer className="bg-card border-t border-border/20 mt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <img src="/public/images/bijoux-by-dox.png" alt="bijoux-by-dox" className="w-52 h-auto"/>
+          </div>
+          <p className="text-muted-foreground font-caption text-sm">
+            © {new Date()?.getFullYear()} Bijoux by Dox. Tous droits réservés. | 
+            Montres authentiques et service premium.
+          </p>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 };

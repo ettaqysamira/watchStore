@@ -43,6 +43,7 @@ const handleFormSubmit = async (formData) => {
       name: item.name,         
       quantity: item.quantity,
       price: item.price,
+      image: item.image
     }));
 
     const orderData = {
@@ -69,7 +70,7 @@ const handleFormSubmit = async (formData) => {
 
     localStorage.setItem("currentOrder", JSON.stringify(savedOrder));
     localStorage.removeItem("cartItems");
-    navigate("/order-confirmation");
+    navigate(`/order-confirmation/${savedOrder._id}`);
   } catch (error) {
     console.error("Order submission failed:", error);
   } finally {

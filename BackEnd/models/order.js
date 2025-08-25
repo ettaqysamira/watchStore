@@ -31,8 +31,32 @@ const orderSchema = new mongoose.Schema({
   },
 
   paymentMethod: { type: String, default: 'cash-on-delivery' },
+  orderDate:   { type: Date, default: Date.now },
+   orderNumber: { type: String, unique: true },
+
 
 }, { timestamps: true });
+
+
+orderSchema.pre("save", async function (next) {
+  if (this.isNew && !this.orderNumber) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const count = await mongoose.model("Order").countDocuments({
+      orderDate: {
+        $gte: new Date(`${year}-${month}-01`),
+        $lt: new Date(`${year}-${month}-31`),
+      }
+    });
+
+    const sequence = String(count + 1).padStart(4, "0"); 
+    this.orderNumber = `ByDox${year}${month}${sequence}`; 
+  }
+  next();
+});
+
 
 const Order = mongoose.model('Order', orderSchema);
 export default Order;
