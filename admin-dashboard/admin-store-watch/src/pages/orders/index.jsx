@@ -3,6 +3,7 @@ import HeaderDashboard from '../../components/elements/HeaderDashboard';
 import OrderStatusTable from './components/OrderStatusTable';
 import OrderControl from './components/OrderControl';
 import SideBar from '../../components/elements/SideBar';
+import OrderStatistic from './components/OrderStatistic';
 
 const OrderDashboard = () => {
   const [filters, setFilters] = useState({
@@ -60,7 +61,12 @@ const OrderDashboard = () => {
 
           <OrderControl onFiltersChange={handleFiltersChange} />
 
-         
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+            <div className="lg:col-span-8">
+              <OrderStatistic />
+            </div>
+            
+          </div>
 
           <div className="mb-8">
             <OrderStatusTable />

@@ -190,7 +190,7 @@ const OrderStatusTable = () => {
                     className="rounded border-border"
                   />
                 </td>
-                <td className="p-4 text-sm font-medium">{order._id}</td>
+                <td className="p-4 text-sm font-medium">{order.orderNumber}</td>
                 <td className="p-4">
                   {order.customer ? (
                     <div>
@@ -278,6 +278,15 @@ const OrderStatusTable = () => {
           </tbody>
         </table>
       </div>
+      <div className="p-4 border-t border-border bg-muted/30">
+       <div className="flex items-center justify-between">
+         <span className="text-sm text-muted-foreground"> Showing {orders.length} of {orders.length} orders </span> 
+         <div className="flex items-center space-x-2"> 
+          <Button variant="outline" size="sm" disabled>Previous</Button>
+           <span className="text-sm text-muted-foreground">Page 1 of 1</span> <Button variant="outline" size="sm" disabled>Next</Button> 
+           </div>
+            </div>
+             </div>
     </div>
   );
 };
