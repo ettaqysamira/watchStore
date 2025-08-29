@@ -112,7 +112,7 @@ const OrderStatusTable = () => {
   }
 
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
+    <div className="bg-card border border-border rounded-lg overflow-hidden" id="tableCommande">
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-foreground">
@@ -280,10 +280,10 @@ const OrderStatusTable = () => {
       </div>
       <div className="p-4 border-t border-border bg-muted/30">
        <div className="flex items-center justify-between">
-         <span className="text-sm text-muted-foreground"> Showing {orders.length} of {orders.length} orders </span> 
+         <span className="text-sm text-muted-foreground"> Afficher {orders.length} sur {orders.length} Commandes </span> 
          <div className="flex items-center space-x-2"> 
-          <Button variant="outline" size="sm" disabled>Previous</Button>
-           <span className="text-sm text-muted-foreground">Page 1 of 1</span> <Button variant="outline" size="sm" disabled>Next</Button> 
+          <Button variant="outline" size="sm" disabled>Précédent</Button>
+           <span className="text-sm text-muted-foreground">Page 1 sur 1</span> <Button variant="outline" size="sm" disabled>Suivant</Button> 
            </div>
             </div>
              </div>
