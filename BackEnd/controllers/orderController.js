@@ -1,7 +1,6 @@
 import Order from "../models/order.js";
 import mongoose from 'mongoose';
 
-
 export const createOrder = async (req, res) => {
   try {
     const { customer, items, totalAmount } = req.body;
@@ -10,12 +9,7 @@ export const createOrder = async (req, res) => {
       return res.status(400).json({ message: "Informations de commande invalides" });
     }
 
-    const newOrder = new Order({
-      customer,
-      items,
-      totalAmount
-    });
-
+    const newOrder = new Order({ customer, items, totalAmount });
     const savedOrder = await newOrder.save();
 
     res.status(201).json(savedOrder);
@@ -38,15 +32,11 @@ export const getOrderById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    let order = null;
-
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      order = await Order.findById(id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Commande non trouvée" });
     }
 
-    if (!order) {
-      order = await Order.findOne({ orderNumber: id });
-    }
+    const order = await Order.findById(id);
 
     if (!order) {
       return res.status(404).json({ message: "Commande non trouvée" });
@@ -58,3 +48,44 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+export const updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
+
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+
+    if (!order) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
+
+    res.json(order);
+  } catch (err) {
+    console.error("Erreur update:", err);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+export const deleteOrder = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
+
+    const order = await Order.findByIdAndDelete(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
+
+    res.json({ message: "Commande supprimée" });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};

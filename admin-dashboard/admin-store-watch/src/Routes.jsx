@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import GestionStockApp from "./pages/watch-stock/gestionStockApp";
 import AddWatchForm from "./pages/watch-stock/components/FormAddWatch";
+import OrderDashboard from "./pages/orders";
+
 
 const Routes = () => {
   return (
@@ -9,6 +11,8 @@ const Routes = () => {
         <Route path="/" element={< GestionStockApp/>} />
         <Route path="/stock-management" element={<GestionStockApp />} />
         <Route path="/watch-form" element={<AddWatchForm />} />
+        <Route path="/orders" element={<OrderDashboard />} />
+
       </RouterRoutes>
     </BrowserRouter>
   );
