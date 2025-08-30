@@ -25,24 +25,22 @@ const OrderStatusTable = () => {
     fetchOrders();
   }, []);
 
-  const updateOrderStatus = async (orderId) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!res.ok) throw new Error("Erreur serveur");
+const updateOrderStatus = async (orderId) => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    if (!res.ok) throw new Error("Erreur serveur");
 
-      setOrders((prev) =>
-        prev.map((o) => (o._id === orderId ? { ...o, status: newStatus } : o))
-      );
-      setEditingOrderId(null);
-      setNewStatus("");
-    } catch (err) {
-      console.error("Erreur update:", err);
-    }
-  };
+    // ⚡ Refresh complet de la page
+    window.location.reload();
+  } catch (err) {
+    console.error("Erreur update:", err);
+  }
+};
+
 
   const sortedOrders = useMemo(() => {
     if (!sortConfig.key) return orders;

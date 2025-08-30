@@ -1,44 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-const OrderStatistic = () => {
+const OrderStatistic = ({ filters }) => {
   const [pipelineData, setPipelineData] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  const fetchOrders = async () => {
+    try {
+      let url = "http://localhost:5000/api/orders";
+
+      const query = [];
+      if (filters?.status && filters.status !== "all") query.push(`status=${filters.status}`);
+      if (filters?.priority && filters.priority !== "all") query.push(`priority=${filters.priority}`);
+      if (filters?.dateRange && filters.dateRange !== "all") query.push(`dateRange=${filters.dateRange}`);
+      if (filters?.fulfillmentCenter && filters.fulfillmentCenter !== "all") query.push(`center=${filters.fulfillmentCenter}`);
+
+      if (query.length > 0) {
+        url += "?" + query.join("&");
+      }
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      const statusCounts = data.reduce((acc, order) => {
+        acc[order.status] = (acc[order.status] || 0) + 1;
+        return acc;
+      }, {});
+
+      const totalOrders = data.length;
+
+      const stages = [
+        { stage: 'Pending', key: 'pending', color: '#3182ce' },
+        { stage: 'Processing', key: 'processing', color: '#d69e2e' },
+        { stage: 'Shipped', key: 'shipped', color: '#805AD5' },
+        { stage: 'Delivered', key: 'delivered', color: '#38a169' },
+      ];
+
+      const formattedData = stages.map(s => ({
+        stage: s.stage,
+        orders: statusCounts[s.key] || 0,
+        percentage: totalOrders > 0 ? ((statusCounts[s.key] || 0) / totalOrders * 100).toFixed(1) : 0,
+        color: s.color,
+      }));
+
+      setPipelineData(formattedData);
+      setLastUpdated(new Date());
+    } catch (err) {
+      console.error("Erreur fetch orders:", err);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/orders");
-        const data = await res.json();
+    fetchOrders(); 
 
-        const statusCounts = data.reduce((acc, order) => {
-          acc[order.status] = (acc[order.status] || 0) + 1;
-          return acc;
-        }, {});
+    const interval = setInterval(() => {
+      fetchOrders(); 
+    }, 60000);
 
-        const totalOrders = data.length;
-
-        const stages = [
-          { stage: 'Pending', key: 'pending', color: '#3182ce' },
-          { stage: 'Processing', key: 'processing', color: '#d69e2e' },
-          { stage: 'Shipped', key: 'shipped', color: '#38a169' },
-          { stage: 'Delivered', key: 'delivered', color: '#1a365d' },
-        ];
-
-        const formattedData = stages.map(s => ({
-          stage: s.stage,
-          orders: statusCounts[s.key] || 0,
-          percentage: totalOrders > 0 ? ((statusCounts[s.key] || 0) / totalOrders * 100).toFixed(1) : 0,
-          color: s.color,
-        }));
-
-        setPipelineData(formattedData);
-      } catch (err) {
-        console.error("Erreur fetch orders:", err);
-      }
-    };
-
-    fetchOrders();
-  }, []);
+    return () => clearInterval(interval);
+  }, [filters]);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -48,9 +68,6 @@ const OrderStatistic = () => {
           <p className="font-medium text-popover-foreground">{label}</p>
           <p className="text-sm text-muted-foreground">
             Orders: <span className="font-medium text-popover-foreground">{data.orders}</span>
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Conversion: <span className="font-medium text-popover-foreground">{data.percentage}%</span>
           </p>
         </div>
       );
@@ -63,7 +80,7 @@ const OrderStatistic = () => {
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-foreground">Statistiques des commandes</h3>
         <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-          <span>Dernière update: just now</span>
+          <span>Dernière update: {lastUpdated.toLocaleTimeString()}</span>
         </div>
       </div>
 
@@ -94,7 +111,7 @@ const OrderStatistic = () => {
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-6">
-        {pipelineData.map((stage, index) => (
+        {pipelineData.map((stage) => (
           <div key={stage.stage} className="text-center">
             <div className="flex items-center justify-center mb-2">
               <div 

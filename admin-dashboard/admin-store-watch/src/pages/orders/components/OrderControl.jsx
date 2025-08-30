@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Icon from '../../../../../../watch-store/src/components/Icon';
 import Button from '../../../../../../watch-store/src/components/elements/Button';
 import Select from '../../../components/elements/Select';
@@ -12,6 +12,21 @@ const OrderControl = ({ onFiltersChange }) => {
   });
   const [autoRefresh, setAutoRefresh] = useState('5min');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [orders, setOrders] = useState([]);
+
+  // Fetch orders depuis l’API
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/orders');
+        const data = await res.json();
+        setOrders(data);
+      } catch (err) {
+        console.error('Erreur fetch orders:', err);
+      }
+    };
+    fetchOrders();
+  }, []);
 
   const statusOptions = [
     { value: 'all', label: 'Tous les statuts' },
@@ -60,6 +75,23 @@ const OrderControl = ({ onFiltersChange }) => {
   const getActiveFiltersCount = () => {
     return Object.values(filters).filter(value => value !== 'all').length;
   };
+
+  const today = new Date();
+  const isToday = (dateString) => {
+    const date = new Date(dateString);
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const todayOrders = orders.filter(o => isToday(o.createdAt || o.orderDate));
+
+  const totalOrders = todayOrders.length;
+  const inProgress = todayOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+  const shipped = todayOrders.filter(o => o.status === 'shipped').length;
+  const delivered = todayOrders.filter(o => o.status === 'delivered').length;
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 mb-6">
@@ -134,20 +166,20 @@ const OrderControl = ({ onFiltersChange }) => {
       <div className="mt-6 pt-4 border-t border-border">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <p className="text-lg font-bold text-foreground">0</p>
+            <p className="text-lg font-bold text-foreground">{totalOrders}</p>
             <p className="text-xs text-muted-foreground">Total Orders</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-bold text-yellow-600">0</p>
-            <p className="text-xs text-muted-foreground">In Progress</p>
+            <p className="text-lg font-bold text-yellow-600">{inProgress}</p>
+            <p className="text-xs text-muted-foreground">Processing</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-bold text-green-600">0</p>
-            <p className="text-xs text-muted-foreground">Delivered Today</p>
+            <p className="text-lg font-bold text-purple-600">{shipped}</p>
+            <p className="text-xs text-muted-foreground">Shipped</p>
           </div>
           <div className="text-center">
-            <p className="text-lg font-bold text-red-600">0</p>
-            <p className="text-xs text-muted-foreground">Delayed</p>
+            <p className="text-lg font-bold text-green-600">{delivered}</p>
+            <p className="text-xs text-muted-foreground">Delivered aujourd’hui</p>
           </div>
         </div>
       </div>
@@ -159,14 +191,14 @@ const OrderControl = ({ onFiltersChange }) => {
             <div className="flex flex-wrap gap-2">
               {Object.entries(filters).map(([key, value]) => {
                 if (value === 'all') return null;
-                
+
                 const getFilterLabel = (key, value) => {
                   const option = {
                     status: statusOptions,
                     priority: priorityOptions,
                     dateRange: dateRangeOptions,
                   }[key]?.find(opt => opt.value === value);
-                  
+
                   return option ? `${key}: ${option.label}` : `${key}: ${value}`;
                 };
 

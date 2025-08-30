@@ -89,3 +89,22 @@ export const deleteOrder = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
+export const getOrderStats = async (req, res) => {
+  try {
+    const stats = await Order.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } }
+    ]);
+
+    const total = stats.reduce((acc, s) => acc + s.count, 0);
+
+    res.json({
+      total,
+       processing: stats.find((s) => s._id === "processing")?.count || 0,
+        shipped: stats.find((s) => s._id === "shipped")?.count || 0,
+        delivered: stats.find((s) => s._id === "delivered")?.count || 0,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
