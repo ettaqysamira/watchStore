@@ -111,6 +111,7 @@ const CheckboxGroup = React.forwardRef(({
     );
 });
 
+
 CheckboxGroup.displayName = "CheckboxGroup";
 
 export { CheckBox, CheckboxGroup };

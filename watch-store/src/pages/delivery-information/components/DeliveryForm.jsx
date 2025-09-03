@@ -4,7 +4,7 @@ import Input from '../../../../../admin-dashboard/admin-store-watch/src/componen
 import Select from '../../../../../admin-dashboard/admin-store-watch/src/components/elements/Select';
 import { CheckBox } from '../../../../../admin-dashboard/admin-store-watch/src/components/elements/CheckBox';
 import Icon from '../../../components/Icon';
-const DeliveryForm = ({ onSubmit, isLoading = false }) => {
+const DeliveryForm = ({ onSubmit, isLoading = false, clearCart }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -72,28 +72,55 @@ case 'email':
     setErrors(prev => ({ ...prev, [name]: error }));
   };
 
-  const handleSubmit = (e) => {
-    e?.preventDefault();
+  const handleSubmit = async (e) => {
+  e?.preventDefault();
   const newErrors = {};
   const requiredFields = ['firstName', 'lastName', 'phone', 'email', 'address', 'city'];
     
-    requiredFields?.forEach(field => {
-      const error = validateField(field, formData?.[field]);
-      if (error) newErrors[field] = error;
+  requiredFields?.forEach(field => {
+    const error = validateField(field, formData?.[field]);
+    if (error) newErrors[field] = error;
+  });
+
+  if (formData?.deliveryOption === 'premium' && 
+      !['casablanca', 'rabat']?.includes(formData?.city)) {
+    newErrors.deliveryOption = 'La livraison premium n\'est disponible qu\'à Casablanca et Rabat';
+  }
+
+  setErrors(newErrors);
+  setTouched(Object.fromEntries(requiredFields?.map(field => [field, true])));
+
+  if (Object.keys(newErrors).length === 0) {
+    onSubmit(formData);
+  
+    try {
+      await fetch("http://localhost:5000/api/email/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+    } catch (err) {
+      console.error("Erreur envoi email:", err);
+    }
+
+    setFormData({
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      address: '',
+      city: '',
+      deliveryOption: 'standard',
+      saveInfo: false,
+      newsletter: false
     });
 
-    if (formData?.deliveryOption === 'premium' && 
-        !['casablanca', 'rabat']?.includes(formData?.city)) {
-      newErrors.deliveryOption = 'La livraison premium n\'est disponible qu\'à Casablanca et Rabat';
+    if (typeof clearCart === 'function') {
+      clearCart();
     }
+  }
+};
 
-    setErrors(newErrors);
-    setTouched(Object.fromEntries(requiredFields?.map(field => [field, true])));
-
-    if (Object.keys(newErrors)?.length === 0) {
-      onSubmit(formData);
-    }
-  };
 
   const isPremiumAvailable = ['casablanca', 'rabat']?.includes(formData?.city);
 

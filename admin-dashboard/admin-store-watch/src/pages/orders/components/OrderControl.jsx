@@ -36,13 +36,6 @@ const OrderControl = ({ onFiltersChange }) => {
     { value: 'delivered', label: 'Delivered' }
   ];
 
-  const priorityOptions = [
-    { value: 'all', label: 'Toutes les priorités' },
-    { value: 'high', label: 'Haute priorité' },
-    { value: 'normal', label: 'Priorité normale' },
-    { value: 'low', label: 'Basse priorité' }
-  ];
-
   const dateRangeOptions = [
     { value: '1day', label: 'Dernières 24 heures' },
     { value: '7days', label: 'Derniers 7 jours' },
@@ -50,11 +43,6 @@ const OrderControl = ({ onFiltersChange }) => {
     { value: '90days', label: 'Derniers 90 jours' },
   ];
 
-  const refreshIntervalOptions = [
-    { value: '1min', label: '1 Minute' },
-    { value: '5min', label: '5 Minutes' },
-    { value: '10min', label: '10 Minutes' },
-  ];
 
   const handleFilterChange = (key, value) => {
     const newFilters = { ...filters, [key]: value };
@@ -89,7 +77,7 @@ const OrderControl = ({ onFiltersChange }) => {
   const todayOrders = orders.filter(o => isToday(o.createdAt || o.orderDate));
 
   const totalOrders = todayOrders.length;
-  const inProgress = todayOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+  const inProgress = todayOrders.filter(o => o.status === 'processing' || o.status === 'processing').length;
   const shipped = todayOrders.filter(o => o.status === 'shipped').length;
   const delivered = todayOrders.filter(o => o.status === 'delivered').length;
 
@@ -118,10 +106,7 @@ const OrderControl = ({ onFiltersChange }) => {
           <div className="flex items-center gap-2">
             <Icon name="RotateCcw" size={16} className="text-muted-foreground" />
             <span className="text-sm text-muted-foreground">Auto-refresh:</span>
-            <Select
-              options={refreshIntervalOptions} value={autoRefresh} onChange={setAutoRefresh}
-              className="w-28"
-            />
+            
           </div>
 
           <Button
@@ -150,12 +135,6 @@ const OrderControl = ({ onFiltersChange }) => {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-4">
-        <Select
-          options={priorityOptions} value={filters.priority}
-          onChange={(value) => handleFilterChange('priority', value)}
-          className="w-40"
-        />
-
         <Select
           options={dateRangeOptions} value={filters.dateRange}
           onChange={(value) => handleFilterChange('dateRange', value)}
@@ -195,7 +174,6 @@ const OrderControl = ({ onFiltersChange }) => {
                 const getFilterLabel = (key, value) => {
                   const option = {
                     status: statusOptions,
-                    priority: priorityOptions,
                     dateRange: dateRangeOptions,
                   }[key]?.find(opt => opt.value === value);
 
@@ -215,6 +193,7 @@ const OrderControl = ({ onFiltersChange }) => {
                       <Icon name="X" size={12} />
                     </button>
                   </span>
+               
                 );
               })}
             </div>

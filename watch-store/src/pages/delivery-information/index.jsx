@@ -83,6 +83,9 @@ const handleFormSubmit = async (formData) => {
   const handleBackToCart = () => {
     navigate('/shopping-cart');
   };
+  const emptyCartFunction = () => {
+  cartItems.forEach(item => removeFromCart(item._id));
+};
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,7 +103,7 @@ const handleFormSubmit = async (formData) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <DeliveryForm 
-              onSubmit={handleFormSubmit} isLoading={isLoading}
+              onSubmit={handleFormSubmit} isLoading={isLoading} clearCart={emptyCartFunction}
             />
             
             <div className="lg:hidden mt-6">
@@ -111,74 +114,11 @@ const handleFormSubmit = async (formData) => {
             </div>
           </div>
 
-          <div className="hidden lg:block">
+    <div  className="hidden lg:block">
             <div className="space-y-6">
               <OrderSummaryCard
                 cartItems={cartItems} deliveryOption={deliveryOption}
               />
-              
-              <Button
-                variant="outline" onClick={handleBackToCart} iconName="ArrowLeft" iconPosition="left" fullWidth
-              >
-                Retour au Panier
-              </Button>
-
-              <div className="bg-card border border-border/20 rounded-lg p-6 shadow-luxury-sm">
-                <h3 className="font-body font-medium text-foreground mb-4 flex items-center space-x-2">
-                  <Icon name="Shield" size={20} className="text-success" />
-                  <span>Garanties & Sécurité</span>
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <Icon name="Lock" size={16} className="text-success mt-1" />
-                    <div>
-                      <p className="font-body font-medium text-sm text-foreground">
-                        Paiement Sécurisé SSL
-                      </p>
-                      <p className="text-xs text-muted-foreground font-caption">
-                        Vos données sont protégées par cryptage 256-bit
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Icon name="Award" size={16} className="text-primary mt-1" />
-                    <div>
-                      <p className="font-body font-medium text-sm text-foreground">
-                        Certificat d'Authenticité
-                      </p>
-                      <p className="text-xs text-muted-foreground font-caption">
-                        Chaque bijou est accompagné de son certificat
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Icon name="RotateCcw" size={16} className="text-accent mt-1" />
-                    <div>
-                      <p className="font-body font-medium text-sm text-foreground">
-                        Retour Gratuit 30 Jours
-                      </p>
-                      <p className="text-xs text-muted-foreground font-caption">
-                        Satisfait ou remboursé sans condition
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <Icon name="Headphones" size={16} className="text-warning mt-1" />
-                    <div>
-                      <p className="font-body font-medium text-sm text-foreground">
-                        Support Client 24/7
-                      </p>
-                      <p className="text-xs text-muted-foreground font-caption">
-                        Une équipe dédiée à votre service
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

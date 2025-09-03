@@ -23,9 +23,8 @@ const Routes = () => {
             <Route path="/shopping-cart" element={<ShoppingCart />} />
             <Route path="/delivery-information" element={<DeliveryInformationForm />} />
             <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
-
           </RouterRoutes>
-          <PanierSide />
+          <PanierSide/>
         </div>
       </CartProvider>
     </BrowserRouter>

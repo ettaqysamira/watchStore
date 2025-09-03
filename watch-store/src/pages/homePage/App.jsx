@@ -8,8 +8,6 @@ const HomePageApp= ()=> {
 return(
     <div className='min-h-screen bg-background'>
         <div className="min-h-screen bg-background">
-        
-        
         <Header/>
          <main className="pt-16 lg:pt-20">
         <section id="hero-section" className="relative">
@@ -20,9 +18,6 @@ return(
             <MontreCategories />
           </section>
          </main>
-
-
-
         <Footer/>
         </div>
     

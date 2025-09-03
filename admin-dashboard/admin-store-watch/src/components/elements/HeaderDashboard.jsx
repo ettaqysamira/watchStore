@@ -12,12 +12,12 @@ const HeaderDashboard = () => {
     { path: '/orders', label: 'Commandes', icon: 'ShoppingBag' },
     { path: '/avis-client', label: 'Avis', icon: 'Star' },
   ];
-
   const secondaryNavItems = [
     { path: '/settings', label: 'Paramètres', icon: 'Settings' },
     { path: '/help', label: 'Aide', icon: 'HelpCircle' },
   ];
 
+  
   const isActivePath = (path) => location.pathname === path;
 
   return (

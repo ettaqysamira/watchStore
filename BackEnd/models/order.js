@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const orderSchema = new mongoose.Schema({
   customer: {
@@ -38,21 +40,14 @@ const orderSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 
-orderSchema.pre("save", async function (next) {
+orderSchema.pre('save', function(next) {
   if (this.isNew && !this.orderNumber) {
     const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
 
-    const count = await mongoose.model("Order").countDocuments({
-      orderDate: {
-        $gte: new Date(`${year}-${month}-01`),
-        $lt: new Date(`${year}-${month}-31`),
-      }
-    });
-
-    const sequence = String(count + 1).padStart(4, "0"); 
-    this.orderNumber = `ByDox${year}${month}${sequence}`; 
+    const shortUuid = uuidv4().split('-')[0]; 
+    this.orderNumber = `ByDox${year}${month}${shortUuid}`;
   }
   next();
 });

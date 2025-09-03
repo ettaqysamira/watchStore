@@ -116,7 +116,8 @@ const MontreCategories = () => {
             
             <div className="absolute inset-0 bg-sophisticated-depth/0 group-hover:bg-sophisticated-depth/20 transition-all duration-smooth flex items-center justify-center opacity-0 group-hover:opacity-100">
               <div className="flex space-x-2">
-                <button className={`${isMobileView ? 'w-7 h-7' : 'w-8 h-8 md:w-10 md:h-10'} bg-pure-clarity rounded-full flex items-center justify-center text-comfortable-reading hover:bg-accent hover:text-accent-foreground transition-all duration-micro`}>
+                <button className={`${isMobileView ? 'w-7 h-7' : 'w-8 h-8 md:w-10 md:h-10'} bg-pure-clarity rounded-full flex items-center justify-center text-comfortable-reading hover:bg-accent hover:text-accent-foreground transition-all duration-micro`}
+                >
                   <Icon name="Eye" size={isMobileView ? 12 : 14} />
                 </button>
                 <button className={`${isMobileView ? 'w-7 h-7' : 'w-8 h-8 md:w-10 md:h-10'} bg-pure-clarity rounded-full flex items-center justify-center text-comfortable-reading hover:bg-accent hover:text-accent-foreground transition-all duration-micro`}>
@@ -133,7 +134,6 @@ const MontreCategories = () => {
             <h3 className={`${isMobileView ? 'text-xs leading-tight' : 'text-sm md:text-[13px]'} font-syne font-semibold leading-[21px] text-comfortable-reading mb-2 line-clamp-2 uppercase`}>
               {product.name}
             </h3>
-            
            
           </div>
 

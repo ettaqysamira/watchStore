@@ -6,6 +6,8 @@ import watchRoutes from './routes/watchRoutes.js';
 import multer from 'multer';
 import path from 'path';
 import orderRoutes from './routes/orderRoutes.js';
+import emailRoutes from "./routes/emailRoutes.js";
+
 
 dotenv.config();
 
@@ -61,6 +63,8 @@ app.post('/api/galleryImages', watchImage.array('image', 5), (req, res) => {
 
 app.use('/api/watches', watchRoutes);
 app.use('/api/orders', orderRoutes);
+app.use("/api/email", emailRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 mongoose.connect(process.env.MONGO_URI)

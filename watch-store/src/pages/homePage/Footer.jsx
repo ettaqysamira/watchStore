@@ -38,8 +38,6 @@ const Footer = () => {
     }
   };
 
-  
-
   const socialLinks = [
     { name: "Facebook", icon: "Facebook", url: "#" },
     { name: "Instagram", icon: "Instagram", url: "#" },
